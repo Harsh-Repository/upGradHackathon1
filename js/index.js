@@ -47,22 +47,22 @@ function displayQuestions(questions) {
     }</h2><p id="question">${question.question}</p>
     <ul>
       <li>
-        <input type="radio" name="option" style="cursor: pointer" id="${
+        <input type="radio" name="option" class="radiogroup" style="cursor: pointer" id="${
           question.options[0]
         }" value="${question.options[0]}"/> ${question.options[0]}
       </li>
       <li>
-        <input type="radio" name="option" style="cursor: pointer" id="${
+        <input type="radio" name="option" class="radiogroup" style="cursor: pointer" id="${
           question.options[1]
         }" value="${question.options[1]}"/> ${question.options[1]}
       </li>
       <li>
-        <input type="radio" name="option" style="cursor: pointer" id="${
+        <input type="radio" name="option" class="radiogroup" style="cursor: pointer" id="${
           question.options[2]
         }" value="${question.options[2]}"/> ${question.options[2]}
       </li>
       <li>
-        <input type="radio" name="option" style="cursor: pointer" id="${
+        <input type="radio" name="option" class="radiogroup" style="cursor: pointer" id="${
           question.options[3]
         }" value="${question.options[3]}"/> ${question.options[3]}
       </li>
@@ -79,6 +79,21 @@ function displayQuestions(questions) {
     nextButton.innerHTML = "Next";
     nextButton.addEventListener("click", nextQuestion);
     document.getElementById("main").appendChild(nextButton);
+
+    let radioButtons = document.querySelectorAll(".radiogroup");
+    for (let i = 0; i < radioButtons.length; i++) {
+      radioButtons[i].addEventListener("click", disableOptions);
+    }
+  }
+
+  function disableOptions(event) {
+    let selectedOption = event.target;
+    let radioButtons = document.querySelectorAll(".radiogroup");
+    for (let i = 0; i < radioButtons.length; i++) {
+      if (radioButtons[i] !== selectedOption) {
+        radioButtons[i].disabled = true;
+      }
+    }
   }
 
   function nextQuestion() {
@@ -116,6 +131,7 @@ function displayQuestions(questions) {
       }
 
       localStorage.setItem("userAnswer", JSON.stringify(parsedAns));
+
       if (selectedAnswer === question.answer) {
         score++;
       }
@@ -188,15 +204,3 @@ function displayQuestions(questions) {
   }
   showQuestion();
 }
-
-// let category1 = "music";
-// let category2 = "modern-art";
-// let category3 = "coding";
-
-// if (category1 === "music" && showScore == true) {
-//   document.getElementById("musicBtn").disabled = true;
-// } else if (category2 === "modern-art" && showScore == true) {
-//   document.getElementById("artBtn").disabled = true;
-// } else if (category3 === "coding" && showScore == true) {
-//   document.getElementById("codingBtn").disabled = true;
-// }

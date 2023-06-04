@@ -20,23 +20,23 @@ const codingQuestions = jsonData.coding.filter((question) => {
 
 document.getElementById("musicBtn").addEventListener("click", function () {
   displayQuestions(musicQuestions);
-  document.getElementById("musicBtn").disabled = true;
+  // document.getElementById("musicBtn").disabled = true;
 });
 
 document.getElementById("artBtn").addEventListener("click", function () {
   displayQuestions(modernArtQuestions);
-  document.getElementById("artBtn").disabled = true;
+  // document.getElementById("artBtn").disabled = true;
 });
 
 document.getElementById("codingBtn").addEventListener("click", function () {
   displayQuestions(codingQuestions);
-  document.getElementById("codingBtn").disabled = true;
+  // document.getElementById("codingBtn").disabled = true;
 });
 
 function displayQuestions(questions) {
   let index = 0;
   let score = 0;
-
+  let selectedAnswer = 0;
   function showQuestion() {
     let question = questions[index];
 
@@ -47,24 +47,24 @@ function displayQuestions(questions) {
     }</h2><p id="question">${question.question}</p>
     <ul>
       <li>
-        <input type="radio" name="option" style="cursor: pointer" value="${
+        <input type="radio" name="option" style="cursor: pointer" id="${
           question.options[0]
-        }"/> ${question.options[0]}
+        }" value="${question.options[0]}"/> ${question.options[0]}
       </li>
       <li>
-        <input type="radio" name="option" style="cursor: pointer" value="${
+        <input type="radio" name="option" style="cursor: pointer" id="${
           question.options[1]
-        }"/> ${question.options[1]}
+        }" value="${question.options[1]}"/> ${question.options[1]}
       </li>
       <li>
-        <input type="radio" name="option" style="cursor: pointer" value="${
+        <input type="radio" name="option" style="cursor: pointer" id="${
           question.options[2]
-        }"/> ${question.options[2]}
+        }" value="${question.options[2]}"/> ${question.options[2]}
       </li>
       <li>
-        <input type="radio" name="option" style="cursor: pointer" value="${
+        <input type="radio" name="option" style="cursor: pointer" id="${
           question.options[3]
-        }"/> ${question.options[3]}
+        }" value="${question.options[3]}"/> ${question.options[3]}
       </li>
     </div>`;
     document.getElementById("main").innerHTML = "";
@@ -83,11 +83,39 @@ function displayQuestions(questions) {
 
   function nextQuestion() {
     let selectedOption = document.querySelector("input[name='option']:checked");
+    let questionName = document.getElementById("question").innerText;
 
     if (selectedOption) {
-      let selectedAnswer = selectedOption.value;
+      selectedAnswer = selectedOption.value;
       let question = questions[index];
+      let object = {
+        question: questionName,
+        answer: selectedAnswer,
+      };
 
+      let parsedAns = [];
+      let previousAnswers = localStorage.getItem("userAnswer");
+
+      if (previousAnswers) {
+        parsedAns = JSON.parse(previousAnswers);
+
+        let stoploop = false;
+        for (let i = 0; i < parsedAns.length; i++) {
+          if (parsedAns[i].question == questionName) {
+            parsedAns[i].answer = selectedAnswer;
+            stoploop = true;
+            break;
+          }
+        }
+
+        if (!stoploop) {
+          parsedAns.push(object);
+        }
+      } else {
+        parsedAns.push(object);
+      }
+
+      localStorage.setItem("userAnswer", JSON.stringify(parsedAns));
       if (selectedAnswer === question.answer) {
         score++;
       }
@@ -96,9 +124,28 @@ function displayQuestions(questions) {
 
       if (index < questions.length) {
         showQuestion();
+        let questionName = document.getElementById("question").innerText;
+        let answer = "";
+
+        let storeAnsers = localStorage.getItem("userAnswer", selectedAnswer);
+
+        if (storeAnsers) {
+          let parsedstoredans = JSON.parse(storeAnsers);
+
+          for (let i = 0; i < parsedstoredans.length; i++) {
+            if (parsedstoredans[i].question == questionName) {
+              answer = parsedstoredans[i].answer;
+              break;
+            }
+          }
+        }
+
+        document.getElementById(answer).checked = true;
       } else {
         showScore();
       }
+    } else if (selectedOption == null) {
+      alert("Please select an answer!");
     }
   }
 
@@ -106,6 +153,25 @@ function displayQuestions(questions) {
     index--;
     if (index >= 0) {
       showQuestion();
+      let questionName = document.getElementById("question").innerText;
+      let answer = "";
+
+      let storeAnsers = localStorage.getItem("userAnswer", selectedAnswer);
+
+      if (storeAnsers) {
+        let parsedstoredans = JSON.parse(storeAnsers);
+
+        for (let i = 0; i < parsedstoredans.length; i++) {
+          if (parsedstoredans[i].question == questionName) {
+            answer = parsedstoredans[i].answer;
+            break;
+          }
+        }
+      }
+
+      document.getElementById(answer).checked = true;
+    } else if (index < 0) {
+      alert("You reached first question of the topic!");
     }
   }
 

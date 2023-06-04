@@ -20,14 +20,17 @@ const codingQuestions = jsonData.coding.filter((question) => {
 
 document.getElementById("musicBtn").addEventListener("click", function () {
   displayQuestions(musicQuestions);
+  document.getElementById("musicBtn").disabled = true;
 });
 
 document.getElementById("artBtn").addEventListener("click", function () {
   displayQuestions(modernArtQuestions);
+  document.getElementById("artBtn").disabled = true;
 });
 
 document.getElementById("codingBtn").addEventListener("click", function () {
   displayQuestions(codingQuestions);
+  document.getElementById("codingBtn").disabled = true;
 });
 
 function displayQuestions(questions) {
@@ -38,22 +41,32 @@ function displayQuestions(questions) {
     let question = questions[index];
 
     let questionElement = document.createElement("div");
-    questionElement.innerHTML = `<h2>Question ${index + 1}</h2><p>${
-      question.question
-    }</p>
-    <p><input type="radio" name="option" value="${question.options[0]}"/> ${
-      question.options[0]
-    }</p>
-    <p><input type="radio" name="option" value="${question.options[1]}"/> ${
-      question.options[1]
-    }</p>
-    <p><input type="radio" name="option" value="${question.options[2]}"/> ${
-      question.options[2]
-    }</p>
-    <p><input type="radio" name="option" value="${question.options[3]}"/> ${
-      question.options[3]
-    }</p>
-    `;
+    questionElement.innerHTML = `
+    <div class="quiz-container"><h2 class="quiz-header">Question ${
+      index + 1
+    }</h2><p id="question">${question.question}</p>
+    <ul>
+      <li>
+        <input type="radio" name="option" style="cursor: pointer" value="${
+          question.options[0]
+        }"/> ${question.options[0]}
+      </li>
+      <li>
+        <input type="radio" name="option" style="cursor: pointer" value="${
+          question.options[1]
+        }"/> ${question.options[1]}
+      </li>
+      <li>
+        <input type="radio" name="option" style="cursor: pointer" value="${
+          question.options[2]
+        }"/> ${question.options[2]}
+      </li>
+      <li>
+        <input type="radio" name="option" style="cursor: pointer" value="${
+          question.options[3]
+        }"/> ${question.options[3]}
+      </li>
+    </div>`;
     document.getElementById("main").innerHTML = "";
     document.getElementById("main").appendChild(questionElement);
 
@@ -109,3 +122,15 @@ function displayQuestions(questions) {
   }
   showQuestion();
 }
+
+// let category1 = "music";
+// let category2 = "modern-art";
+// let category3 = "coding";
+
+// if (category1 === "music" && showScore == true) {
+//   document.getElementById("musicBtn").disabled = true;
+// } else if (category2 === "modern-art" && showScore == true) {
+//   document.getElementById("artBtn").disabled = true;
+// } else if (category3 === "coding" && showScore == true) {
+//   document.getElementById("codingBtn").disabled = true;
+// }
